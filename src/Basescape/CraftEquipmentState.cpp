@@ -38,6 +38,48 @@
 
 namespace OpenXcom
 {
+/**
+ * Helper to add items to craft equipment list
+ * @param game The current Game
+ * @param list The item's list
+ * @param item The item to add
+ * @param base The Base of the craft
+ * @param craft The Craft to equip
+ * @param row The current row
+ * @param items The already added items
+ * @return Wether or not item was added to the list
+*/
+inline bool addItems (Game * game, TextList * list, RuleItem * item, Base * base, Craft * craft, int & row, std::vector<std::string> & _items)
+{
+	if (base->getItems()->getItem(item->getType()) == 0 &&
+	    craft->getItems()->getItem(item->getType()) == 0)
+	{
+		return false;
+	}
+	std::wstringstream ss, ss2;
+	ss << base->getItems()->getItem(item->getType());
+	ss2 << craft->getItems()->getItem(item->getType());
+
+	std::wstring s = game->getLanguage()->getString(item->getType());
+	if (item->getBattleType() == BT_AMMO)
+	{
+		s.insert(0, L"  ");
+	}
+	Uint8 color;
+	if (craft->getItems()->getItem(item->getType ()) == 0)
+	{
+		color = Palette::blockOffset(13)+10;
+	}
+	else
+	{
+		color = Palette::blockOffset(13);
+	}
+	list->addRow(3, s.c_str(), ss.str().c_str(), ss2.str().c_str());
+	list->setRowColor(row, color);
+	_items.push_back(item->getType ());
+	row++;
+	return true;
+}
 
 /**
  * Initializes all the elements in the Craft Equipment screen.
@@ -114,66 +156,60 @@ CraftEquipmentState::CraftEquipmentState(Game *game, Base *base, unsigned int cr
 	_lstEquipment->onRightArrowPress((ActionHandler)&CraftEquipmentState::lstEquipmentRightArrowPress);
 	_lstEquipment->onRightArrowRelease((ActionHandler)&CraftEquipmentState::lstEquipmentRightArrowRelease);
 
-	_items.push_back("STR_PISTOL");
-	_items.push_back("STR_PISTOL_CLIP");
-	_items.push_back("STR_RIFLE");
-	_items.push_back("STR_RIFLE_CLIP");
-	_items.push_back("STR_HEAVY_CANNON");
-	_items.push_back("STR_HC_AP_AMMO");
-	_items.push_back("STR_HC_HE_AMMO");
-	_items.push_back("STR_HC_I_AMMO");
-	_items.push_back("STR_AUTO_CANNON");
-	_items.push_back("STR_AC_AP_AMMO");
-	_items.push_back("STR_AC_HE_AMMO");
-	_items.push_back("STR_AC_I_AMMO");
-	_items.push_back("STR_ROCKET_LAUNCHER");
-	_items.push_back("STR_SMALL_ROCKET");
-	_items.push_back("STR_LARGE_ROCKET");
-	_items.push_back("STR_INCENDIARY_ROCKET");
-	_items.push_back("STR_GRENADE");
-	_items.push_back("STR_SMOKE_GRENADE");
+	const std::map<std::string, RuleItem*> & ruleItems (_game->getRuleset()->getItems ());
+	std::map<RuleItem*,std::vector<RuleItem*> > items;
+	std::vector<RuleItem*> empty;
+	std::map<std::string, int> *const baseItems (_base->getItems()->getContents());
+	for(std::map<std::string, RuleItem*>::const_iterator i = ruleItems.begin (); i != ruleItems.end (); ++i)
+	{
+		if (!game->getSavedGame()->isItemAvailable (i->second, game->getRuleset()))
+		{
+			continue;
+		}
+		RuleItem * item = i->second;
+		switch(item->getBattleType())
+		{
+		case BT_MELEE:
+		case BT_GRENADE:
+		case BT_PROXIMITYGRENADE:
+		case BT_MEDIKIT:
+		case BT_SCANNER:
+		case BT_MINDPROBE:
+		case BT_PSIAMP:
+		case BT_FLARE:
+		case BT_FIREARM:
+		{
+			items[item] = empty;
+			if(item->getBattleType() != BT_FIREARM)
+			{
+				break;
+			}
+			std::vector<std::string> * ammos (item->getCompatibleAmmo());
+			for(std::vector<std::string>::iterator j = ammos->begin (); j != ammos->end (); ++j)
+			{
+				std::map<std::string, RuleItem*>::const_iterator itItem = ruleItems.find (*j);
+				if(itItem == ruleItems.end ())
+					continue;
+				items[item].push_back(itItem->second);
+			}
+			break;
+		}
+		case BT_AMMO:
+		default:
+			break;
+		}
+	}
 
 	int row = 0;
-	for (std::vector<std::string>::iterator i = _items.begin(); i != _items.end();)
+	for (std::map<RuleItem*,std::vector<RuleItem*> >::iterator i = items.begin(); i != items.end(); ++i)
 	{
-		if (_base->getItems()->getItem(*i) == 0 && c->getItems()->getItem(*i) == 0)
+		if(!addItems (_game, _lstEquipment, i->first, _base, c, row, _items))
 		{
-			i = _items.erase(i);
+			continue;
 		}
-		else
+		for(std::vector<RuleItem*>::iterator j = i->second.begin (); j != i->second.end (); ++j)
 		{
-			std::wstringstream ss, ss2;
-			ss << _base->getItems()->getItem(*i);
-			ss2 << c->getItems()->getItem(*i);
-
-			RuleItem *rule = _game->getRuleset()->getItem(*i);
-			std::wstring s = _game->getLanguage()->getString(*i);
-			if (rule->getBattleType() == BT_AMMO)
-			{
-				s.insert(0, L"  ");
-			}
-			_lstEquipment->addRow(3, s.c_str(), ss.str().c_str(), ss2.str().c_str());
-
-			Uint8 color;
-			if (c->getItems()->getItem(*i) == 0)
-			{
-				if (rule->getBattleType() == BT_AMMO)
-				{
-					color = Palette::blockOffset(15)+6;
-				}
-				else
-				{
-					color = Palette::blockOffset(13)+10;
-				}
-			}
-			else
-			{
-				color = Palette::blockOffset(13);
-			}
-			_lstEquipment->setRowColor(row, color);
-
-			++i;
-			row++;
+			addItems (_game, _lstEquipment, *j, _base, c, row, _items);
 		}
 	}
 
