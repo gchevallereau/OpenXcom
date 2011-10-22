@@ -1015,6 +1015,7 @@ XcomRuleset::XcomRuleset() : Ruleset()
 	lp->setTUSnap(30);
 	lp->setAccuracyAimed(85);
 	lp->setTUAimed(60);
+	lp->setFireSound(4);
 
 	RuleManufactureInfo *mlp = new RuleManufactureInfo("STR_LASER_PISTOL");
 	mlp->setCategory("STR_WEAPON");
@@ -1075,6 +1076,7 @@ XcomRuleset::XcomRuleset() : Ruleset()
 	lr->setTUSnap(30);
 	lr->setAccuracyAimed(85);
 	lr->setTUAimed(60);
+	lr->setFireSound(4);
 
 	RuleManufactureInfo *mlr = new RuleManufactureInfo("STR_LASER_RIFLE");
 	mlr->setCategory("STR_WEAPON");
