@@ -43,6 +43,7 @@
 #include "Soldier.h"
 #include "../Ruleset/RuleManufactureInfo.h"
 #include "Production.h"
+#include "../Ruleset/RuleItem.h"
 
 namespace OpenXcom
 {
@@ -815,4 +816,21 @@ Soldier *SavedGame::inspectSoldiers(int *total, int rank)
 	return highestRanked;
 }
 
+/**
+ * Check wether a RuleItem is available
+ * @param item The RuleItem to check
+ * @param ruleset The Game Ruleset
+ * @return wether or not the RuleItem is available
+*/
+bool SavedGame::isItemAvailable (const RuleItem * item, Ruleset * ruleset)
+{
+	const std::map<std::string, RuleResearchProject *> & researchs(ruleset->getResearchProjects ());
+	std::map<std::string, RuleResearchProject *>::const_iterator iter = researchs.find (item->getType());
+	if(iter == researchs.end ())
+	{
+		return true;
+	}
+
+	return std::find (_discovered.begin (), _discovered.end (), iter->second) != _discovered.end ();
+}
 }

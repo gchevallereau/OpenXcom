@@ -41,6 +41,7 @@ class RuleResearchProject;
 class ResearchProject;
 class Soldier;
 class RuleManufactureInfo;
+class RuleItem;
 
 /**
  * Enumator containing all the possible game difficulties.
@@ -135,6 +136,8 @@ public:
 	bool handlePromotions();
 	/// Checks how many soldiers of a rank exist and which one has the highest score.
 	Soldier *inspectSoldiers(int *total, int rank);
+	/// Check that a RuleItem is available.
+	bool isItemAvailable (const RuleItem * item, Ruleset * ruleset);
 };
 
 }
