@@ -21,21 +21,30 @@
 #include "Tile.h"
 #include "../Ruleset/RuleItem.h"
 #include "../Ruleset/RuleInventory.h"
+#include "NoAmmoItem.h"
 
 namespace OpenXcom
 {
-
 /**
  * Initializes a item of the specified type.
  * @param rules Pointer to ruleset.
  */
-BattleItem::BattleItem(RuleItem *rules, int *id) : _id(*id), _rules(rules), _owner(0), _previousOwner(0), _inventorySlot(0), _inventoryX(0), _inventoryY(0), _ammoItem(0), _explodeTurn(0), _ammoQuantity(0), _tile(0), _unit(0)
+BattleItem::BattleItem(RuleItem *rules, int *id) : _id(id ? *id : 0), _rules(rules), _owner(0), _previousOwner(0), _inventorySlot(0), _inventoryX(0), _inventoryY(0), _ammoItem(0), _explodeTurn(0), _ammoQuantity(0), _tile(0), _unit(0)
 {
-	if (_rules->getBattleType() == BT_AMMO)
+	if (_rules && _rules->getBattleType() == BT_AMMO)
 	{
 		setAmmoQuantity(_rules->getClipSize());
 	}
-	(*id)++;
+	if (id)
+	{
+		(*id)++;
+	}
+	if (_rules && _rules->getBattleType() == BT_FIREARM && !needAmmo ())
+	{
+		BattleItem * no_ammo(new NoAmmoItem(_rules));
+		setAmmoItem(0);
+		setAmmoItem(no_ammo);
+	}
 }
 
 /**
@@ -322,6 +331,12 @@ int BattleItem::setAmmoItem(BattleItem *item)
 	if (_ammoItem)
 		return -1;
 
+	if (_rules->getClipSize () == -1)
+	{
+		_ammoItem = item;
+		return 0;
+	}
+
 	for (std::vector<std::string>::iterator i = _rules->getCompatibleAmmo()->begin(); i != _rules->getCompatibleAmmo()->end(); ++i)
 	{
 		if (*i == item->getRules()->getType())
@@ -376,4 +391,12 @@ void BattleItem::setUnit(BattleUnit *unit)
 	_unit = unit;
 }
 
+/**
+ * Check wether or not this item need ammunition
+ * @return If this item need ammunition
+*/
+bool BattleItem::needAmmo () const
+{
+	return (_rules->getClipSize () > 0 || _rules->getCompatibleAmmo()->size () > 0);
+}
 }

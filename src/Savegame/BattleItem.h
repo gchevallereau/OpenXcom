@@ -41,7 +41,6 @@ class BattleItem
 {
 private:
 	int _id;
-	RuleItem *_rules;
 	BattleUnit *_owner, *_previousOwner;
 	BattleUnit *_unit;
 	Tile *_tile;
@@ -49,11 +48,13 @@ private:
 	int _inventoryX, _inventoryY;
 	BattleItem *_ammoItem;
 	int _explodeTurn, _ammoQuantity;
+protected:
+	RuleItem *_rules;
 public:
 	/// Creates a item of the specified type.
 	BattleItem(RuleItem *rules, int *id);
 	/// Cleans up the item.
-	~BattleItem();
+	virtual ~BattleItem();
 	/// Loads the item from YAML.
 	void load(const YAML::Node& node);
 	/// Saves the item to YAML.
@@ -61,7 +62,7 @@ public:
 	/// Gets the item's ruleset.
 	RuleItem *const getRules() const;
 	/// Gets the item's ammo quantity
-	int getAmmoQuantity() const;
+	virtual int getAmmoQuantity() const;
 	/// Sets the item's ammo quantity.
 	void setAmmoQuantity(int qty);
 	/// Gets the turn to explode on
@@ -106,7 +107,8 @@ public:
 	BattleUnit *getUnit() const;
 	/// Sets the corpse's unit.
 	void setUnit(BattleUnit *unit);
-
+	/// Check wether or not this item need ammunitions
+	bool needAmmo () const;
 };
 
 }

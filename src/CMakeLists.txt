@@ -401,6 +401,8 @@ set ( savegame_src
   Savegame/ResearchProject.cpp
   Savegame/Production.h
   Savegame/Production.cpp
+  Savegame/NoAmmoItem.h
+  Savegame/NoAmmoItem.cpp
 )
 
 
