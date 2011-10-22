@@ -133,6 +133,8 @@ public:
 	RuleManufactureInfo *getManufactureProject (const std::string &id) const;
 	/// Get the list of all manufacture projects.
 	const std::map<std::string, RuleManufactureInfo *> & getManufactureProjects () const;
+	/// Get the list of all items
+	const std::map<std::string, RuleItem*> & getItems () const;
 };
 
 }

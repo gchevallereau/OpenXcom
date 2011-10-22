@@ -732,4 +732,12 @@ const std::map<std::string, RuleManufactureInfo *> & Ruleset::getManufactureProj
 	return _manufacture;
 }
 
+/**
+ * Returns the list of items
+ * @return The list of items
+*/
+const std::map<std::string, RuleItem*> & Ruleset::getItems () const
+{
+	return _items;
+}
 }
