@@ -24,10 +24,10 @@
 # (To distribute this file outside of CMake, substitute the full
 #  License text for the above reference.)
 
-FIND_PATH(YAMLCPP_INCLUDE_DIR yaml.h
+FIND_PATH(YAMLCPP_INCLUDE_DIR yaml-cpp/yaml.h
   HINTS
   $ENV{YAMLCPPDIR}
-  PATH_SUFFIXES include/yaml-cpp include
+  PATH_SUFFIXES include
   PATHS
   ~/Library/Frameworks
   /Library/Frameworks
@@ -59,6 +59,6 @@ SET(YAMLCPP_FOUND "NO")
 
 IF(YAMLCPP_LIBRARY AND YAMLCPP_INCLUDE_DIR)
   SET(YAMLCPP_FOUND "YES")
-  SET(YAMLCPP_INCLUDE_DIR "${YAMLCPP_INCLUDE_DIR};${YAMLCPP_INCLUDE_DIR}/..")
+  SET(YAMLCPP_INCLUDE_DIR "${YAMLCPP_INCLUDE_DIR}/..")
 ENDIF(YAMLCPP_LIBRARY AND YAMLCPP_INCLUDE_DIR)
 

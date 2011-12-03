@@ -19,7 +19,7 @@
 #ifndef OPENXCOM_PRODUCTION
 #define OPENXCOM_PRODUCTION
 
-#include "yaml.h"
+#include <yaml-cpp/yaml.h>
 
 namespace OpenXcom
 {

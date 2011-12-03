@@ -22,7 +22,7 @@
 #include <string>
 #include <vector>
 #include "SDL.h"
-#include "yaml.h"
+#include <yaml-cpp/yaml.h>
 
 namespace OpenXcom
 {

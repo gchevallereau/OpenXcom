@@ -18,7 +18,7 @@
  */
 #include "SaveGameState.h"
 #include <iostream>
-#include "yaml.h"
+#include <yaml-cpp/yaml.h>
 #include "../Savegame/SavedGame.h"
 #include "../Engine/Game.h"
 #include "../Engine/Action.h"

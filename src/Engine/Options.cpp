@@ -22,7 +22,7 @@
 #include <map>
 #include <sstream>
 #include <fstream>
-#include "yaml.h"
+#include <yaml-cpp/yaml.h>
 #include "Exception.h"
 #include "CrossPlatform.h"
 

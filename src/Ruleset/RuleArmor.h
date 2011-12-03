@@ -20,7 +20,7 @@
 #define OPENXCOM_RULEARMOR_H
 
 #include <string>
-#include "yaml.h"
+#include <yaml-cpp/yaml.h>
 #include "MapData.h"
 
 namespace OpenXcom

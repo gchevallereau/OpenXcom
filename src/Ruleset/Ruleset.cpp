@@ -18,7 +18,7 @@
  */
 #include "Ruleset.h"
 #include <fstream>
-#include "yaml.h"
+#include <yaml-cpp/yaml.h>
 #include "../Engine/Options.h"
 #include "../Engine/Exception.h"
 #include "SoldierNamePool.h"

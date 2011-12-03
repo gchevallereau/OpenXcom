@@ -20,7 +20,7 @@
 #define OPENXCOM_BATTLEITEM_H
 
 #include "../Battlescape/Position.h"
-#include "yaml.h"
+#include <yaml-cpp/yaml.h>
 
 namespace OpenXcom
 {

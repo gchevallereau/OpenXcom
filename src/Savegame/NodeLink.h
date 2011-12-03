@@ -19,7 +19,7 @@
 #ifndef OPENXCOM_NODELINK_H
 #define OPENXCOM_NODELINK_H
 
-#include "yaml.h"
+#include <yaml-cpp/yaml.h>
 
 namespace OpenXcom
 {

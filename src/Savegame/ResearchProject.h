@@ -18,7 +18,7 @@
  */
 #ifndef OPENXCOM_RESEARCHPROJECT
 #define OPENXCOM_RESEARCHPROJECT
-#include "yaml.h"
+#include <yaml-cpp/yaml.h>
 
 namespace OpenXcom
 {
